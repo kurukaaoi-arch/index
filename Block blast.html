@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Block Blast</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            gap: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #f72585, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a9b7c6;
+            margin-bottom: 20px;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+        
+        .game-board-container {
+            background-color: rgba(13, 19, 33, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #2d3746;
+        }
+        
+        .game-info {
+            background-color: rgba(13, 19, 33, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #2d3746;
+            min-width: 300px;
+            flex: 1;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background-color: #1c2431;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #2d3746;
+            transition: transform 0.2s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4cc9f0;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a9b7c6;
+        }
+        
+        .controls {
+            margin-top: 25px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.reset {
+            background: linear-gradient(to right, #f72585, #b5179e);
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+        }
+        
+        button.reset:hover {
+            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.4);
+        }
+        
+        .instructions {
+            background-color: #1c2431;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 5px solid #4361ee;
+        }
+        
+        .instructions h3 {
+            color: #4cc9f0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            color: #a9b7c6;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-gap: 5px;
+            margin: 0 auto;
+            background-color: #0d1321;
+            border-radius: 5px;
+            padding: 10px;
+            border: 3px solid #2d3746;
+        }
+        
+        .block {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.3s;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .block:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .block-removing {
+            animation: explode 0.5s forwards;
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        
+        .block-falling {
+            transition: transform 0.3s;
+        }
+        
+        .color-1 { background-color: #ff595e; }
+        .color-2 { background-color: #ffca3a; }
+        .color-3 { background-color: #8ac926; }
+        .color-4 { background-color: #1982c4; }
+        .color-5 { background-color: #6a4c93; }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        .game-status {
+            font-size: 1.2rem;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background-color: rgba(13, 19, 33, 0.8);
+            margin-bottom: 10px;
+            text-align: center;
+            border: 2px solid #2d3746;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .score-bonus {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #ffca3a;
+            pointer-events: none;
+            animation: floatUp 1s forwards;
+        }
+        
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        
+        @media (max-width: 1100px) {
+            .game-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-info {
+                width: 100%;
+                max-width: 600px;
+            }
+            
+            #game-board {
+                grid-template-columns: repeat(10, 1fr);
+            }
+            
+            .block {
+                width: 35px;
+                height: 35px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            #game-board {
+                grid-template-columns: repeat(10, 1fr);
+            }
+            
+            .block {
+                width: 28px;
+                height: 28px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .stat-box {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bomb"></i> BLOCK BLAST</h1>
+            <p class="subtitle">Hancurkan kelompok blok dengan warna yang sama untuk mendapatkan skor tertinggi!</p>
+        </header>
+        
+        <div class="game-status" id="game-status">
+            Pilih kelompok blok dengan warna sama untuk mulai bermain!
+        </div>
+        
+        <div class="game-area">
+            <div class="game-board-container">
+                <div id="game-board"></div>
+            </div>
+            
+            <div class="game-info">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="score">0</div>
+                        <div class="stat-label">SKOR</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="moves">0</div>
+                        <div class="stat-label">GERAKAN</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="blocks-left">100</div>
+                        <div class="stat-label">BLOK TERSISA</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="combo">1x</div>
+                        <div class="stat-label">COMBO</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button id="hint-btn">
+                        <i class="fas fa-lightbulb"></i> PETUNJUK
+                    </button>
+                    <button id="shuffle-btn">
+                        <i class="fas fa-random"></i> ACAK BLOK
+                    </button>
+                    <button class="reset" id="reset-btn">
+                        <i class="fas fa-redo"></i> MULAI ULANG
+                    </button>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> Cara Bermain</h3>
+                    <ul>
+                        <li>Klik pada kelompok blok dengan warna yang sama (minimal 2 blok)</li>
+                        <li>Semakin banyak blok yang dihancurkan sekaligus, semakin tinggi skor yang didapat</li>
+                        <li>Kombo akan bertambah jika Anda menghancurkan blok berturut-turut</li>
+                        <li>Gunakan tombol "Petunjuk" untuk bantuan menemukan kelompok blok</li>
+                        <li>Game berakhir ketika tidak ada lagi kelompok blok yang bisa dihancurkan</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Game Block Blast | Dibuat dengan HTML, CSS, dan JavaScript</p>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi game
+        const BOARD_SIZE = 10;
+        const COLORS = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5'];
+        const MIN_GROUP_SIZE = 2;
+        
+        // Variabel game
+        let board = [];
+        let score = 0;
+        let moves = 0;
+        let blocksRemaining = BOARD_SIZE * BOARD_SIZE;
+        let combo = 1;
+        let gameActive = true;
+        let hintTimeout = null;
+        
+        // Elemen DOM
+        const gameBoard = document.getElementById('game-board');
+        const scoreElement = document.getElementById('score');
+        const movesElement = document.getElementById('moves');
+        const blocksLeftElement = document.getElementById('blocks-left');
+        const comboElement = document.getElementById('combo');
+        const gameStatus = document.getElementById('game-status');
+        const hintBtn = document.getElementById('hint-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        
+        // Fungsi untuk menginisialisasi papan permainan
+        function initBoard() {
+            board = [];
+            gameBoard.innerHTML = '';
+            
+            // Buat papan dengan warna acak
+            for (let row = 0; row < BOARD_SIZE; row++) {
+                board[row] = [];
+                for (let col = 0; col < BOARD_SIZE; col++) {
+                    const colorIndex = Math.floor(Math.random() * COLORS.length);
+                    const colorClass = COLORS[colorIndex];
+                    board[row][col] = { color: colorClass, removed: false };
+                    
+                    // Buat elemen blok
+                    const block = document.createElement('div');
+                    block.className = `block ${colorClass}`;
+                    block.dataset.row = row;
+                    block.dataset.col = col;
+                    
+                    // Tambahkan event listener untuk klik
+                    block.addEventListener('click', () => handleBlockClick(row, col));
+                    
+                    gameBoard.appendChild(block);
+                }
+            }
+            
+            updateGameStats();
+        }
+        
+        // Fungsi untuk menangani klik pada blok
+        function handleBlockClick(row, col) {
+            if (!gameActive) return;
+            
+            const color = board[row][col].color;
+            const group = findConnectedBlocks(row, col, color);
+            
+            // Cek apakah kelompok cukup besar
+            if (group.length >= MIN_GROUP_SIZE) {
+                // Hapus blok dari papan
+                removeBlocks(group);
+                
+                // Perbarui statistik
+                moves++;
+                updateGameStats();
+                
+                // Cek apakah game sudah selesai
+                checkGameEnd();
+            } else {
+                setGameStatus('Pilih kelompok dengan minimal 2 blok yang sama!', '#ff595e');
+            }
+        }
+        
+        // Fungsi untuk menemukan blok yang terhubung (flood fill algorithm)
+        function findConnectedBlocks(row, col, color, visited = new Set()) {
+            const key = `${row},${col}`;
+            
+            // Cek batas dan kondisi
+            if (
+                row < 0 || row >= BOARD_SIZE || 
+                col < 0 || col >= BOARD_SIZE ||
+                visited.has(key) ||
+                board[row][col].removed ||
+                board[row][col].color !== color
+            ) {
+                return [];
+            }
+            
+            visited.add(key);
+            let group = [{row, col}];
+            
+            // Cek tetangga (atas, kanan, bawah, kiri)
+            const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+            for (const [dx, dy] of directions) {
+                group = group.concat(findConnectedBlocks(row + dx, col + dy, color, visited));
+            }
+            
+            return group;
+        }
+        
+        // Fungsi untuk menghapus blok dari papan
+        function removeBlocks(blocks) {
+            if (blocks.length === 0) return;
+            
+            // Hitung skor untuk kelompok ini
+            const groupScore = calculateScore(blocks.length);
+            
+            // Tampilkan animasi skor bonus
+            showScoreBonus(blocks[0].row, blocks[0].col, groupScore);
+            
+            // Update skor
+            score += groupScore * combo;
+            
+            // Update jumlah blok yang tersisa
+            blocksRemaining -= blocks.length;
+            
+            // Tandai blok sebagai dihapus
+            for (const block of blocks) {
+                const {row, col} = block;
+                board[row][col].removed = true;
+                
+                // Tambahkan animasi penghapusan
+                const blockElement = getBlockElement(row, col);
+                blockElement.classList.add('block-removing');
+            }
+            
+            // Setelah animasi selesai, jatuhkan blok di atasnya
+            setTimeout(() => {
+                // Hapus elemen blok
+                for (const block of blocks) {
+                    const {row, col} = block;
+                    const blockElement = getBlockElement(row, col);
+                    if (blockElement) {
+                        blockElement.remove();
+                    }
+                }
+                
+                // Jatuhkan blok di atasnya
+                dropBlocks();
+                
+                // Geser blok ke kiri jika kolom kosong
+                shiftColumns();
+                
+                // Tambahkan blok baru di bagian atas
+                fillEmptySpaces();
+                
+                // Perbarui tampilan papan
+                updateBoardDisplay();
+                
+                // Update combo
+                updateCombo(blocks.length);
+                
+                // Reset hint jika aktif
+                if (hintTimeout) {
+                    clearTimeout(hintTimeout);
+                    hintTimeout = null;
+                }
+                
+                // Tampilkan status
+                setGameStatus(`Bagus! ${blocks.length} blok dihancurkan. Kombo: ${combo}x`, '#8ac926');
+                
+            }, 500);
+        }
+        
+        // Fungsi untuk menghitung skor berdasarkan jumlah blok
+        function calculateScore(blockCount) {
+            // Rumus: 10 poin untuk blok pertama, 20 untuk kedua, 30 untuk ketiga, dst.
+            return blockCount * (blockCount + 1) * 5;
+        }
+        
+        // Fungsi untuk menampilkan animasi skor bonus
+        function showScoreBonus(row, col, bonus) {
+            const blockElement = getBlockElement(row, col);
+            if (!blockElement) return;
+            
+            const rect = blockElement.getBoundingClientRect();
+            const scoreBonus = document.createElement('div');
+            scoreBonus.className = 'score-bonus';
+            scoreBonus.textContent = `+${bonus * combo}`;
+            scoreBonus.style.left = `${rect.left + rect.width / 2}px`;
+            scoreBonus.style.top = `${rect.top}px`;
+            
+            document.body.appendChild(scoreBonus);
+            
+            // Hapus elemen setelah animasi selesai
+            setTimeout(() => {
+                scoreBonus.remove();
+            }, 1000);
+        }
+        
+        // Fungsi untuk menjatuhkan blok ke bawah
+        function dropBlocks() {
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                let emptyRow = BOARD_SIZE - 1;
+                
+                // Iterasi dari bawah ke atas
+                for (let row = BOARD_SIZE - 1; row >= 0; row--) {
+                    if (!board[row][col].removed) {
+                        // Jika baris ini tidak kosong, pindahkan ke baris kosong terendah
+                        if (row !== emptyRow) {
+                            board[emptyRow][col] = {...board[row][col]};
+                            board[row][col] = {color: '', removed: true};
+                        }
+                        emptyRow--;
+                    }
+                }
+            }
+        }
+        
+        // Fungsi untuk menggeser kolom ke kiri jika kosong
+        function shiftColumns() {
+            let emptyCol = 0;
+            
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                // Cek apakah kolom memiliki blok
+                let hasBlocks = false;
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    if (!board[row][col].removed) {
+                        hasBlocks = true;
+                        break;
+                    }
+                }
+                
+                // Jika kolom memiliki blok, geser ke 
